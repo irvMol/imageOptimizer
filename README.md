@@ -1,16 +1,13 @@
-Sure, here's a README file template for your image processing tool:
-
 ````markdown
-# Image Processing Tool
+# imageOptimizer
 
-The Image Processing Tool is a simple Python application with a graphical user interface (GUI) that allows users to rename and/or resize a batch of images within a selected directory. This tool is especially useful for tasks like organizing and preparing images for various projects.
+imageOptimizer is a simple Python application with a graphical user interface (GUI) that allows users to rename and/or resize a batch of images within a selected directory. This tool is especially useful for tasks like organizing and preparing images for various projects. I use it a lot during web design or making thumbnails.
 
 ## Features
 
 - Rename images by appending a project name and an index to the original file names.
-- Resize images by specifying a percentage of the original dimensions.
+- Resize images by specifying a percentage of the original dimensions. Can Resize up to 125%.
 - Option to choose between renaming, resizing, or both.
-- Dynamic update of the resize percentage label based on the slider value.
 - Ability to process images in bulk within a selected directory.
 - User-friendly GUI for easy interaction.
 
@@ -24,17 +21,17 @@ The Image Processing Tool is a simple Python application with a graphical user i
 
 1. Clone or download this repository to your local machine.
 
-2. Install the required Python libraries if you haven't already:
+2. Install the required Python libraries if you haven't already, preferably in a virtual environment:
 
    ```bash
    pip install pillow
    ```
 ````
 
-3. Run the `image_processing_tool.py` script:
+3. Run the `imageOptimizer.py` script:
 
    ```bash
-   python image_processing_tool.py
+   python imageOptimizer.py
    ```
 
 4. Use the GUI to perform the following steps:
@@ -47,21 +44,14 @@ The Image Processing Tool is a simple Python application with a graphical user i
 
 5. Select a directory containing the images you want to process using the file dialog that appears.
 
-6. The tool will process the images based on your selected options and display the results in the GUI.
-
 ## License
 
-This Image Processing Tool is open-source software released under the [MIT License](LICENSE). You are free to use, modify, and distribute it as per the terms of the license.
+imageOptimizer is open-source software released under the [MIT License](LICENSE). You are free to use, modify, and distribute it as per the terms of the license.
 
 ## Author
 
-[Your Name]
+Irving Moliina
 
-If you encounter any issues or have suggestions for improvement, please feel free to [create an issue](https://github.com/yourusername/image-processing-tool/issues) on GitHub.
+If you encounter any issues or have suggestions for improvement, please feel free to [create an issue](https://github.com/irvMol/imageOptimizer/issues) on GitHub.
 
 Happy image processing!
-
-```
-
-Replace `[Your Name]` with your name or the name of the tool's author if applicable. You can also customize this README further based on your project's specific details and requirements.
-```
