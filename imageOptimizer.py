@@ -45,6 +45,45 @@ def toggle_rename_state():
         project_name_entry.config(state="disabled")
 
 
+def generate_thumbnails(img_dir, thumbnail_size):
+    thumbnail_dir = os.path.join(img_dir, "thumbnails")
+
+    if not os.path.exists(thumbnail_dir):
+        os.makedirs(thumbnail_dir)
+
+    for i, file in enumerate(os.listdir(img_dir)):
+        cur_img_path = os.path.join(img_dir, file)
+        if thumbnail_var.get():
+            try:
+                img = resize_image(cur_img_path, thumbnail_size)
+                if img:
+                    thumbnail_path = os.path.join(thumbnail_dir, file)
+                    img.save(thumbnail_path, optimize=True, quality=85)
+                    print(f"Generated thumbnail for {file}")
+            except IOError:
+                print("Wrong file type or error generating thumbnail for " + file)
+    thumbnail_dir = os.path.join(img_dir, "thumbnails")
+
+    if not os.path.exists(thumbnail_dir):
+        os.makedirs(thumbnail_dir)
+
+    for i, file in enumerate(os.listdir(img_dir)):
+        cur_img_path = os.path.join(img_dir, file)
+        if thumbnail_var.get():
+            try:
+                img = Image.open(cur_img_path)
+                img = ImageOps.exif_transpose(img)
+                width, height = img.size
+                new_width = int(width * thumbnail_size / 100)
+                new_height = int(height * thumbnail_size / 100)
+                img.thumbnail((new_width, new_height))
+                thumbnail_path = os.path.join(thumbnail_dir, file)
+                img.save(thumbnail_path, optimize=True, quality=85)
+                print(f"Generated thumbnail for {file}")
+            except IOError:
+                print("Wrong file type or error generating thumbnail for " + file)
+
+
 def process_images():
     project_name = project_name_entry.get()
     img_dir = filedialog.askdirectory(title="Select Image Directory")
@@ -57,24 +96,40 @@ def process_images():
 
     rename_option = rename_var.get()
     resize_option = resize_var.get()
+    generate_thumbnail_option = thumbnail_var.get()
 
     for i, file in enumerate(os.listdir(img_dir)):
         cur_img_path = os.path.join(img_dir, file)
-        if rename_option and project_name not in file:
+
+        # Check if the file is an image file (supports various extensions)
+        image_extensions = (".jpg", ".jpeg", ".png", ".gif", ".bmp")
+
+        if rename_option and project_name not in file and cur_img_path.lower().endswith(image_extensions):
             new_img_path = rename_image(cur_img_path, project_name, i, img_dir)
             if new_img_path:
                 print(f"Renamed {file} to {os.path.basename(new_img_path)}")
-        elif resize_option:
+                cur_img_path = new_img_path  # Update the current path to the renamed path
+
+        if resize_option:
             try:
-                resized_img = resize_image(cur_img_path, percent)
-                if resized_img:
-                    new_img_path = os.path.join(
-                        img_dir, f"{project_name}{i}.jpg")
-                    resized_img.save(new_img_path, optimize=True, quality=85)
-                    print(
-                        f"Resized {file} and saved to {os.path.basename(new_img_path)}")
+                # Check if the file is an image file (supports various extensions)
+                if cur_img_path.lower().endswith(image_extensions):
+                    resized_img = resize_image(cur_img_path, percent)
+                    if resized_img:
+                        new_img_path = os.path.join(
+                            img_dir, f"{project_name}{i}.jpg")
+                        resized_img.save(
+                            new_img_path, optimize=True, quality=85)
+                        print(
+                            f"Resized {file} and saved to {os.path.basename(new_img_path)}")
+                else:
+                    print(f"Skipping non-image file: {file}")
             except IOError:
-                print("Wrong file type or error processing " + file)
+                print("Error processing " + file)
+
+    if generate_thumbnail_option:
+        thumbnail_size = int(thumbnail_size_entry.get())
+        generate_thumbnails(img_dir, thumbnail_size)
 
     result_label.config(text="Image processing complete.")
 
@@ -107,6 +162,19 @@ percentage_slider = tk.Scale(
     window, from_=1, to=125, orient="horizontal", length=200)
 percentage_slider.set(50)
 percentage_slider.pack()
+
+
+# Create and arrange widgets for thumbnail generation
+thumbnail_var = IntVar()
+thumbnail_checkbox = tk.Checkbutton(
+    window, text="Generate Thumbnails", variable=thumbnail_var)
+thumbnail_checkbox.pack()
+
+thumbnail_size_label = tk.Label(window, text="Thumbnail Size Percentage:")
+thumbnail_size_label.pack()
+
+thumbnail_size_entry = tk.Entry(window)
+thumbnail_size_entry.pack()
 
 process_button = tk.Button(
     window, text="Process Images", command=process_images)
