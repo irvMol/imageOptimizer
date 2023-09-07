@@ -10,6 +10,7 @@ imageOptimizer is a simple Python application with a graphical user interface (G
 - Option to choose between renaming, resizing, or both.
 - Ability to process images in bulk within a selected directory.
 - User-friendly GUI for easy interaction.
+- Ability to dynamically create thumbnails.
 
 ## Requirements
 
